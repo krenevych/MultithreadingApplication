@@ -2,6 +2,7 @@ package com.example.multithreadingapplication
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +12,7 @@ import kotlin.concurrent.thread
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private val handler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,20 +49,26 @@ class MainActivity : AppCompatActivity() {
         // on Progress
             // load City
         loadCity { city ->
-            // and set it into correspondent text view
-            binding.tvCityValue.text = city
+            handler.post{
+                // and set it into correspondent text view
+                binding.tvCityValue.text = city
+            }
 
             // then load temperature for loaded City,
             loadTemperature(city) { temperature ->
-                // and set it into correspondent text view
-                binding.tvTemperatureValue.text = temperature.toString()
 
-                // on Finish:
-                // hide progress bar
-                binding.progressBar.visibility = View.GONE
+                handler.post {
+                    // and set it into correspondent text view
+                    binding.tvTemperatureValue.text = temperature.toString()
 
-                // enable button "load data"
-                binding.btnLoadData.isEnabled = true
+                    // on Finish:
+                    // hide progress bar
+                    binding.progressBar.visibility = View.GONE
+
+                    // enable button "load data"
+                    binding.btnLoadData.isEnabled = true
+                }
+
             }
         }
 
