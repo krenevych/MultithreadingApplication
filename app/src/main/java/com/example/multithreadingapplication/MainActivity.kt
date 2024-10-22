@@ -6,6 +6,10 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.example.multithreadingapplication.databinding.ActivityMainBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,15 +23,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.btnLoadData.setOnClickListener {
-            loadData()
+            CoroutineScope(Dispatchers.Main).launch {
+                loadData()
+            }
+
         }
 
     }
 
     @SuppressLint("SetTextI18n")
-    private fun loadData() {
+    private suspend fun loadData() {
 
-        Log.d(TAG, "loadData: start data loading from internet...")
+        Log.d(TAG, "loadData: start ${this@MainActivity}")
 
         // TODO:
 
@@ -59,16 +66,21 @@ class MainActivity : AppCompatActivity() {
 
             // enable button "load data"
         binding.btnLoadData.isEnabled = true
+
+        Log.d(TAG, "loadData: finish ${this@MainActivity}")
     }
 
-    private fun loadCity(): String {
-        Thread.sleep(3_000)  // simulate loading...
+    private suspend fun loadCity(): String {
+//        Thread.sleep(3_000)  // simulate loading...
+        delay(3_000)
 
         return "Kyiv"
     }
 
-    private fun loadTemperature(city: String): Int {
-        Thread.sleep(3_000)  // simulate loading...
+    private suspend fun loadTemperature(city: String): Int {
+//        Thread.sleep(3_000)  // simulate loading...
+        delay(3_000)
+
         return 9
     }
 
