@@ -2,8 +2,6 @@ package com.example.multithreadingapplication
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -31,8 +29,6 @@ class MainActivity : AppCompatActivity() {
     private fun loadData() {
 
         Log.d(TAG, "loadData: start data loading from internet...")
-
-        // TODO:
 
         // on Start:
             // disable button "load data"
