@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.example.multithreadingapplication.databinding.ActivityMainBinding
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
 
@@ -45,31 +46,42 @@ class MainActivity : AppCompatActivity() {
 
         // on Progress
             // load City
-        val city: String = loadCity()
-               // and set it into correspondent text view
-        binding.tvCityValue.text = city
+        loadCity { city ->
+            // and set it into correspondent text view
+            binding.tvCityValue.text = city
+
             // then load temperature for loaded City,
-        val temperature: Int = loadTemperature(city)
-               // and set it into correspondent text view
-        binding.tvTemperatureValue.text = temperature.toString()
+            loadTemperature(city) { temperature ->
+                // and set it into correspondent text view
+                binding.tvTemperatureValue.text = temperature.toString()
 
-        // on Finish:
-            // hide progress bar
-        binding.progressBar.visibility = View.GONE
+                // on Finish:
+                // hide progress bar
+                binding.progressBar.visibility = View.GONE
 
-            // enable button "load data"
-        binding.btnLoadData.isEnabled = true
+                // enable button "load data"
+                binding.btnLoadData.isEnabled = true
+            }
+        }
+
     }
 
-    private fun loadCity(): String {
-        Thread.sleep(3_000)  // simulate loading...
+    private fun loadCity(callback : (String) -> Unit) {
+        thread {
+            Thread.sleep(3_000)  // simulate loading...
+            callback("Kyiv")   // return "Kyiv"
+        }
 
-        return "Kyiv"
     }
 
-    private fun loadTemperature(city: String): Int {
-        Thread.sleep(3_000)  // simulate loading...
-        return 9
+    private fun loadTemperature(city: String, callback: (Int) -> Unit) {
+        thread {
+            Log.d(TAG, "loadTemperature: for city $city")
+            Thread.sleep(3_000)  // simulate loading...
+            callback(9) // return 9
+        }
+
+
     }
 
     companion object {
