@@ -13,7 +13,6 @@ import kotlin.concurrent.thread
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private val handler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         // on Progress
             // load City
         loadCity { city ->
-            handler.post{
+            runOnUiThread {
                 // and set it into correspondent text view
                 binding.tvCityValue.text = city
             }
@@ -58,7 +57,7 @@ class MainActivity : AppCompatActivity() {
             // then load temperature for loaded City,
             loadTemperature(city) { temperature ->
 
-                handler.post {
+                runOnUiThread {
                     // and set it into correspondent text view
                     binding.tvTemperatureValue.text = temperature.toString()
 
