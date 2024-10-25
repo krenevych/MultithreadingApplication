@@ -5,11 +5,12 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.multithreadingapplication.databinding.ActivityMainBinding
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,9 +24,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.btnLoadData.setOnClickListener {
-            CoroutineScope(Dispatchers.Main).launch {
+            lifecycleScope.launch {
                 loadData()
             }
+
+//            val coroutineScope = CoroutineScope(Dispatchers.Main)
+//            coroutineScope.launch {
+//                loadData()
+//            }
 
         }
 
@@ -71,8 +77,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private suspend fun loadCity(): String {
-//        Thread.sleep(3_000)  // simulate loading...
-        delay(3_000)
+        withContext(Dispatchers.IO) {
+            Thread.sleep(3_000)
+        }  // simulate loading...
+//        delay(3_000)
 
         return "Kyiv"
     }
