@@ -12,6 +12,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.concurrent.thread
+import kotlin.coroutines.Continuation
+import kotlin.coroutines.suspendCoroutine
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,10 +27,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.btnLoadData.setOnClickListener {
-//            CoroutineScope(Dispatchers.Main).launch {
-//                loadData()
-//            }
-            loadDataWithoutCoroutine(1)
+            CoroutineScope(Dispatchers.Main).launch {
+                loadData()
+            }
+//            loadDataWithoutCoroutine(1)
 
         }
 
@@ -112,7 +114,8 @@ class MainActivity : AppCompatActivity() {
 
         // on Progress
         // load City
-        val city: String = loadCity()
+
+        val city: String = loadCityWithoutCoroutineWrapper()
         // and set it into correspondent text view
         binding.tvCityValue.text = city
         // then load temperature for loaded City,
@@ -142,6 +145,14 @@ class MainActivity : AppCompatActivity() {
         delay(3_000)
 
         return 9
+    }
+
+    private suspend fun loadCityWithoutCoroutineWrapper() : String {
+        return suspendCoroutine { it: Continuation<String> ->
+            loadCityWithoutCoroutine { city ->
+                it.resumeWith(Result.success(city))
+            }
+        }
     }
 
     private fun loadCityWithoutCoroutine(callback: (String) -> Unit) {
