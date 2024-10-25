@@ -4,12 +4,14 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.multithreadingapplication.databinding.ActivityMainBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,12 +25,70 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.btnLoadData.setOnClickListener {
-            CoroutineScope(Dispatchers.Main).launch {
-                loadData()
-            }
+//            CoroutineScope(Dispatchers.Main).launch {
+//                loadData()
+//            }
+            loadDataWithoutCoroutine(1)
 
         }
 
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun loadDataWithoutCoroutine(step: Int, parameter: Any? = null) {
+
+        Log.d(TAG, "loadData: start ${this@MainActivity}")
+
+        when (step) {
+            1 -> { // on Start:
+                // disable button "load data"
+                binding.btnLoadData.isEnabled = false
+                // show progress bar
+                binding.progressBar.visibility = View.VISIBLE
+
+                // clear City
+                binding.tvCityValue.text = ""
+                // clear Temperature
+                binding.tvTemperatureValue.text = ""
+                // show Toast that data is started loading.
+                Toast.makeText(this, "Data loading started", Toast.LENGTH_SHORT).show()
+
+
+                // on Progress
+                // load City
+                loadCityWithoutCoroutine { city: String ->
+                    runOnUiThread {
+                        loadDataWithoutCoroutine(2, city)
+                    }
+                }
+            }
+
+            2 -> {
+                // and set it into correspondent text view
+                val city = (parameter as String)
+                binding.tvCityValue.text = city
+                // then load temperature for loaded City,
+                loadTemperatureWithoutCoroutine(city) { temp: Int ->
+                    runOnUiThread {
+                        loadDataWithoutCoroutine(3, temp)
+                    }
+                }
+            }
+
+            3 -> {
+                val temperature = (parameter as Int)
+                // and set it into correspondent text view
+                binding.tvTemperatureValue.text = temperature.toString()
+                // on Finish:
+                // hide progress bar
+                binding.progressBar.visibility = View.GONE
+
+                // enable button "load data"
+                binding.btnLoadData.isEnabled = true
+
+                Log.d(TAG, "loadData: finish ${this@MainActivity}")
+            }
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -39,32 +99,32 @@ class MainActivity : AppCompatActivity() {
         // TODO:
 
         // on Start:
-            // disable button "load data"
+        // disable button "load data"
         binding.btnLoadData.isEnabled = false
-            // show progress bar
+        // show progress bar
         binding.progressBar.visibility = View.VISIBLE
 
-            // clear City
+        // clear City
         binding.tvCityValue.text = ""
-            // clear Temperature
+        // clear Temperature
         binding.tvTemperatureValue.text = ""
-            // show Toast that data is started loading.
+        // show Toast that data is started loading.
 
         // on Progress
-            // load City
+        // load City
         val city: String = loadCity()
-               // and set it into correspondent text view
+        // and set it into correspondent text view
         binding.tvCityValue.text = city
-            // then load temperature for loaded City,
+        // then load temperature for loaded City,
         val temperature: Int = loadTemperature(city)
-               // and set it into correspondent text view
+        // and set it into correspondent text view
         binding.tvTemperatureValue.text = temperature.toString()
 
         // on Finish:
-            // hide progress bar
+        // hide progress bar
         binding.progressBar.visibility = View.GONE
 
-            // enable button "load data"
+        // enable button "load data"
         binding.btnLoadData.isEnabled = true
 
         Log.d(TAG, "loadData: finish ${this@MainActivity}")
@@ -83,6 +143,23 @@ class MainActivity : AppCompatActivity() {
 
         return 9
     }
+
+    private fun loadCityWithoutCoroutine(callback: (String) -> Unit) {
+        thread {
+            Thread.sleep(3_000)  // simulate loading...
+            callback("Kyiv")
+        }
+
+    }
+
+    private fun loadTemperatureWithoutCoroutine(city: String, callback: (Int) -> Unit) {
+        thread {
+            Thread.sleep(3_000)  // simulate loading...
+            callback(9)
+        }
+
+    }
+
 
     companion object {
         val TAG = "XXXX"
