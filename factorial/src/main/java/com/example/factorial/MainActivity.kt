@@ -2,10 +2,7 @@ package com.example.factorial
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.factorial.databinding.ActivityMainBinding
 import java.math.BigInteger
 
@@ -28,9 +25,9 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    private fun calculateFactorial(n: Int) : BigInteger {
+    private fun calculateFactorial(n: Int): BigInteger {
         var f = BigInteger.ONE
-        for (i in 1..n){
+        for (i in 1..n) {
             f *= i.toBigInteger()
         }
         return f
