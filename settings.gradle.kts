@@ -21,3 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "MultithreadingApplication"
 include(":app")
+include(":factorial")
