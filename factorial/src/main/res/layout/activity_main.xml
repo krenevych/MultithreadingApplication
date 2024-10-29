@@ -20,16 +20,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <Button
         android:id="@+id/btnCalcFactorial"
-        android:layout_width="wrap_content"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="@string/calculate_factorial"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnCancel"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etNum" />
 
+    <Button
+        android:id="@+id/btnCancel"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/cancel"
+        android:enabled="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnCalcFactorial"
+        app:layout_constraintTop_toBottomOf="@+id/etNum" />
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -44,8 +57,7 @@
         <TextView
             android:id="@+id/tvFactorial"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
+            android:layout_height="wrap_content" />
 
     </ScrollView>
 
@@ -64,5 +76,7 @@
         tools:visibility="visible"
 
         />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

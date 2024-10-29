@@ -2,4 +2,5 @@
     <string name="app_name">factorial</string>
     <string name="calculate_factorial">Calculate factorial</string>
     <string name="enter_n">Enter n</string>
+    <string name="cancel">Cancel</string>
 </resources>
