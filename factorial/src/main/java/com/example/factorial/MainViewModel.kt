@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.math.BigInteger
@@ -26,6 +26,8 @@ class MainViewModel : ViewModel() {
         get() = _progress
 
 
+    var job: Job? = null
+
     fun calculateFactorial(n: String?) {
         if (n.isNullOrEmpty()) {
             _error.value = true
@@ -38,24 +40,19 @@ class MainViewModel : ViewModel() {
 
         val n_int = n.toInt()
 
-        viewModelScope.launch(Dispatchers.Default) {
-            val res = factorial(n_int).toString()
-//            _factorialLD.postValue(res)  // postValue - setup data in Main thread.
-//            _progress.postValue(false)
-            withContext(Dispatchers.Main) {
-                _factorialLD.value = res
-                _progress.value = false
+        job = viewModelScope.launch {
+
+            val res = withContext(Dispatchers.Default) {
+                factorial(n_int).toString()
             }
 
+
+            _factorialLD.value = res
+            _progress.value = false
         }
 
     }
 
-
-    fun cancelCalculation() {
-        viewModelScope.cancel()
-        _progress.postValue(false)
-    }
 
     private fun factorial(n: Int): BigInteger {
         var f = BigInteger.ONE
@@ -63,5 +60,13 @@ class MainViewModel : ViewModel() {
             f *= i.toBigInteger()
         }
         return f
+    }
+
+    fun cancelCalculation() {
+        job?.cancel()
+        _progress.value = false
+        _error.value = false
+        _factorialLD.value = ""
+
     }
 }
