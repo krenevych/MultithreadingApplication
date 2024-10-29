@@ -3,31 +3,30 @@ package com.example.factorial
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.CoroutineScope
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.math.BigInteger
 
 class MainViewModel : ViewModel() {
 
 
     private val _factorialLD = MutableLiveData<String>()
-    val factorialLD : LiveData<String>
+    val factorialLD: LiveData<String>
         get() = _factorialLD
 
     private val _error = MutableLiveData<Boolean>()
-    val error : LiveData<Boolean>
+    val error: LiveData<Boolean>
         get() = _error
 
     private val _progress = MutableLiveData<Boolean>()
-    val progress : LiveData<Boolean>
+    val progress: LiveData<Boolean>
         get() = _progress
 
 
-    val coroutineScope = CoroutineScope(Dispatchers.Default)
-
-    fun calculateFactorial(n: String?){
+    fun calculateFactorial(n: String?) {
         if (n.isNullOrEmpty()) {
             _error.value = true
             _progress.value = false
@@ -39,25 +38,22 @@ class MainViewModel : ViewModel() {
 
         val n_int = n.toInt()
 
-        coroutineScope.launch {
+        viewModelScope.launch(Dispatchers.Default) {
             val res = factorial(n_int).toString()
-            _factorialLD.postValue(res)  // postValue - setup data in Main thread.
-            _progress.postValue(false)
-//            _factorialLD.value = res
-//            _progress.value = false
+//            _factorialLD.postValue(res)  // postValue - setup data in Main thread.
+//            _progress.postValue(false)
+            withContext(Dispatchers.Main) {
+                _factorialLD.value = res
+                _progress.value = false
+            }
+
         }
 
     }
 
 
-    override fun onCleared() {
-        super.onCleared()
-
-        coroutineScope.cancel()
-    }
-
     fun cancelCalculation() {
-        coroutineScope.cancel()
+        viewModelScope.cancel()
         _progress.postValue(false)
     }
 
