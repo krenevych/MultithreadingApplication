@@ -25,11 +25,11 @@ class MainViewModel : ViewModel() {
 
     fun calculateFactorial(n: String?) {
         if (n.isNullOrEmpty()) {
-            _state.value = Error()
+            _state.value = Error  // new Error() - створюється новий обʼєкт
             return
         }
 
-        _state.value = Progress()
+        _state.value = Progress
 
         val n_int = n.toInt()
 

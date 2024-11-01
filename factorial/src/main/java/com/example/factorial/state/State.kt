@@ -14,8 +14,8 @@ package com.example.factorial.state
 
 sealed class State
 
-class Error: State()
-class Progress: State()
+data object Error: State()
+data object Progress: State()
 class Factorial(
     val value: String
 ): State()

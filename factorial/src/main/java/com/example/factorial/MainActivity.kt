@@ -45,10 +45,10 @@ class MainActivity : AppCompatActivity() {
 
 
             when (state) {
-                is Error ->
+                Error ->  // по опeрації порівняння
                     Toast.makeText(this, "Please enter valid integer!", Toast.LENGTH_SHORT).show()
 
-                is Progress -> {
+                Progress -> {
                     binding.progressBar.visibility = View.VISIBLE
                     binding.etNum.isEnabled = false
                     binding.btnCalcFactorial.isEnabled = false
