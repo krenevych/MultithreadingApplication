@@ -1,4 +1,4 @@
-package com.example.factorial
+package com.example.factorial.state
 
 //data class State (
 //    val factorial: String = "",
@@ -12,7 +12,7 @@ package com.example.factorial
 //    Factorial(""),
 //}
 
-abstract class State
+sealed class State
 
 class Error: State()
 class Progress: State()

@@ -2,16 +2,15 @@ package com.example.factorial
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.text.Editable
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import com.example.factorial.databinding.ActivityMainBinding
-import java.math.BigInteger
+import com.example.factorial.state.Error
+import com.example.factorial.state.Factorial
+import com.example.factorial.state.Progress
+import com.example.factorial.state.State
 
 class MainActivity : AppCompatActivity() {
 

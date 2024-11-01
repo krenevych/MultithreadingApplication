@@ -4,6 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.factorial.state.Error
+import com.example.factorial.state.Factorial
+import com.example.factorial.state.Progress
+import com.example.factorial.state.State
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -54,5 +58,7 @@ class MainViewModel : ViewModel() {
         job?.cancel()
         job = null
     }
+
+//    class MyNewState: State()  // не можна оголосити нащадка класу State за межами пакету package com.example.factorial.state
 
 }
