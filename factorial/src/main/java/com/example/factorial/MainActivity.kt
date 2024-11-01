@@ -29,11 +29,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.btnCalcFactorial.setOnClickListener {
-//            val f = calculateFactorial(binding.etNum.text.toString().toInt())
-//            binding.tvFactorial.text = f.toString()
-//            val viewModel1: MainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-//            viewModel
-//            Log.d("XXX", "onCreate: ")
             binding.tvFactorial.text = ""
             val n = binding.etNum.text.toString()
             viewModel.calculateFactorial(n)
@@ -43,17 +38,12 @@ class MainActivity : AppCompatActivity() {
             viewModel.cancelCalculation()
         }
 
-        viewModel.factorialLD.observe(this) { fact: String ->
-            binding.tvFactorial.text = fact
-        }
-
-        viewModel.error.observe(this) { err: Boolean ->
-            if (err)
+        viewModel.state.observe(this) { state: State ->
+            if (state.error) {
                 Toast.makeText(this, "Please enter valid integer!", Toast.LENGTH_SHORT).show()
-        }
+            }
 
-        viewModel.progress.observe(this) { inProgress: Boolean ->
-            if (inProgress) {
+            if (state.progress) {
                 binding.progressBar.visibility = View.VISIBLE
                 binding.etNum.isEnabled = false
                 binding.btnCalcFactorial.isEnabled = false
@@ -64,6 +54,8 @@ class MainActivity : AppCompatActivity() {
                 binding.btnCalcFactorial.isEnabled = true
                 binding.btnCancel.isEnabled = false
             }
+
+            binding.tvFactorial.text = state.factorial
         }
 
     }

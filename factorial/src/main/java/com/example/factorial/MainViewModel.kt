@@ -13,30 +13,19 @@ import java.math.BigInteger
 class MainViewModel : ViewModel() {
 
 
-    private val _factorialLD = MutableLiveData<String>()
-    val factorialLD: LiveData<String>
-        get() = _factorialLD
-
-    private val _error = MutableLiveData<Boolean>()
-    val error: LiveData<Boolean>
-        get() = _error
-
-    private val _progress = MutableLiveData<Boolean>()
-    val progress: LiveData<Boolean>
-        get() = _progress
-
+    private val _state = MutableLiveData<State>()
+    val state: LiveData<State>
+        get() = _state
 
     var job: Job? = null
 
     fun calculateFactorial(n: String?) {
         if (n.isNullOrEmpty()) {
-            _error.value = true
-            _progress.value = false
+            _state.value = State(error = true)
             return
         }
 
-        _progress.value = true
-        _error.value = false
+        _state.value = State(progress = true)
 
         val n_int = n.toInt()
 
@@ -46,9 +35,7 @@ class MainViewModel : ViewModel() {
                 factorial(n_int).toString()
             }
 
-
-            _factorialLD.value = res
-            _progress.value = false
+            _state.value = State(factorial = res)
         }
 
     }
@@ -63,10 +50,9 @@ class MainViewModel : ViewModel() {
     }
 
     fun cancelCalculation() {
+        _state.value = State()
         job?.cancel()
-        _progress.value = false
-        _error.value = false
-        _factorialLD.value = ""
-
+        job = null
     }
+
 }
