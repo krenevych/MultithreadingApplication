@@ -45,17 +45,19 @@ class MainActivity : AppCompatActivity() {
             binding.btnCancel.isEnabled = false
 
 
-            if (state is Error) {
-                Toast.makeText(this, "Please enter valid integer!", Toast.LENGTH_SHORT).show()
+            when (state) {
+                is Error ->
+                    Toast.makeText(this, "Please enter valid integer!", Toast.LENGTH_SHORT).show()
+
+                is Progress -> {
+                    binding.progressBar.visibility = View.VISIBLE
+                    binding.etNum.isEnabled = false
+                    binding.btnCalcFactorial.isEnabled = false
+                    binding.btnCancel.isEnabled = true
+                }
+
+                is Factorial -> binding.tvFactorial.text = state.value
             }
-            if (state is Progress) {
-                binding.progressBar.visibility = View.VISIBLE
-                binding.etNum.isEnabled = false
-                binding.btnCalcFactorial.isEnabled = false
-                binding.btnCancel.isEnabled = true
-            }
-            if (state is Factorial)
-                binding.tvFactorial.text = state.value
         }
 
     }
