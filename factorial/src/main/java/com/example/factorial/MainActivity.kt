@@ -39,23 +39,23 @@ class MainActivity : AppCompatActivity() {
         }
 
         viewModel.state.observe(this) { state: State ->
-            if (state.error) {
+            binding.progressBar.visibility = View.GONE
+            binding.etNum.isEnabled = true
+            binding.btnCalcFactorial.isEnabled = true
+            binding.btnCancel.isEnabled = false
+
+
+            if (state is Error) {
                 Toast.makeText(this, "Please enter valid integer!", Toast.LENGTH_SHORT).show()
             }
-
-            if (state.progress) {
+            if (state is Progress) {
                 binding.progressBar.visibility = View.VISIBLE
                 binding.etNum.isEnabled = false
                 binding.btnCalcFactorial.isEnabled = false
                 binding.btnCancel.isEnabled = true
-            } else {
-                binding.progressBar.visibility = View.GONE
-                binding.etNum.isEnabled = true
-                binding.btnCalcFactorial.isEnabled = true
-                binding.btnCancel.isEnabled = false
             }
-
-            binding.tvFactorial.text = state.factorial
+            if (state is Factorial)
+                binding.tvFactorial.text = state.value
         }
 
     }

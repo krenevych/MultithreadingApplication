@@ -21,11 +21,11 @@ class MainViewModel : ViewModel() {
 
     fun calculateFactorial(n: String?) {
         if (n.isNullOrEmpty()) {
-            _state.value = State(error = true)
+            _state.value = Error()
             return
         }
 
-        _state.value = State(progress = true)
+        _state.value = Progress()
 
         val n_int = n.toInt()
 
@@ -35,7 +35,7 @@ class MainViewModel : ViewModel() {
                 factorial(n_int).toString()
             }
 
-            _state.value = State(factorial = res)
+            _state.value = Factorial(res)
         }
 
     }
@@ -50,7 +50,7 @@ class MainViewModel : ViewModel() {
     }
 
     fun cancelCalculation() {
-        _state.value = State()
+        _state.value = Factorial("")  // не прогрес і не помилка, хай буде порожній факторіал
         job?.cancel()
         job = null
     }
