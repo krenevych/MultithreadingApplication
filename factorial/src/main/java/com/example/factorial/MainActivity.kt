@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
 
 
             when (state) {
-                Error ->  // по опeрації порівняння
+                Error ->  // по опeрації порівняння  // state == Error
                     Toast.makeText(this, "Please enter valid integer!", Toast.LENGTH_SHORT).show()
 
                 Progress -> {
@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
                     binding.btnCancel.isEnabled = true
                 }
 
-                is Factorial -> binding.tvFactorial.text = state.value
+                is Factorial -> binding.tvFactorial.text = state.value  // state is Factorial
             }
         }
 
